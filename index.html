@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ruby Go Game</title>
+        <style type="text/css">
+            .goban {
+                border: 1px solid black;
+                margin: 0;
+                padding: 0;
+                background-color: brown;
+            }
+
+            .goban td {
+                border: 1px solid black;
+                height: 15px;
+                width: 15px;
+                margin: 0;
+                padding: 0;
+            }
+
+            .goban td.x {
+                background-color: black;
+            }
+
+            .goban td.o {
+                background-color: white;
+            }
+        </style>
+        <script type="text/javascript">
+          let gameId = 0
+          let board = null
+          let ws = null
+          let color = "white"
+
+          const queryPrefix = "ws://localhost:9294"
+          const commandPrefix = "http://localhost:9293"
+
+          function initialize() {
+            ws = new WebSocket(queryPrefix)
+            ws.onmessage = (m) => updateGame(JSON.parse(m.data))
+          }
+
+          function updateGame(state) {
+            console.log("updating", state)
+            populateGoban(state.board)
+          }
+
+          function selectColor(newColor) {
+            color = newColor
+          }
+
+          function populateGoban(board) {
+            const goban = document.getElementById('goban')
+            let content = ''
+            board.forEach((row,i) => {
+              content += "<tr>"
+              row.forEach((col, j) => {
+                content += `<td class="${col}" onclick="selectPosition(${j}, ${i})"></td>`
+              })
+            })
+
+            goban.innerHTML = content
+          }
+
+          function selectPosition(x,y) {
+            fetch(`${commandPrefix}/game/${gameId}/move?x=${x}&y=${y}&color=${color}`, { method: 'POST'})
+          }
+
+          document.addEventListener('DOMContentLoaded', (event) => { initialize() })
+        </script>
+    </head>
+    <body>
+        <h1>Ruby Go Game</h1>
+        <table id="goban" class="goban">
+        </table>
+        <button onclick="selectColor('black')">BLACK</button>
+        <button onclick="selectColor('white')">WHITE</button>
+    </body>
+</html>

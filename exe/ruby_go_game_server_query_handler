@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "ruby_go_game_server"
+
+RubyGoGameServer.run_query_handler
