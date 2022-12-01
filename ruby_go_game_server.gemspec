@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "ruby-kafka", "~> 0.7"
   spec.add_dependency "falcon", "~> 0.34"
-  spec.add_dependency "sinatra", "~> 2.0"
+  spec.add_dependency "sinatra", ">= 2", "< 4"
   spec.add_dependency "ruby-go", "~> 0.4"
   spec.add_dependency "async-websocket", "~> 0.13"
 end
